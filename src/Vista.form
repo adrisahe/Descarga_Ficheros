@@ -31,6 +31,7 @@
                 <properties>
                   <minimumSize width="460" height="25"/>
                   <preferredSize width="460" height="25"/>
+                  <text value="https://speed.hetzner.de/100MB.bin"/>
                 </properties>
               </component>
             </children>
@@ -117,12 +118,19 @@
           </component>
         </children>
       </grid>
-      <grid id="35e84" binding="centro" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <scrollpane id="9abf1" binding="centro">
         <constraints border-constraint="Center"/>
         <properties/>
-        <border type="etched"/>
-        <children/>
-      </grid>
+        <border type="none"/>
+        <children>
+          <grid id="5ac1b" binding="panelCentro" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints/>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

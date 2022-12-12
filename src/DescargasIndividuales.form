@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="DescargasIndividuales">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="70"/>
+    </constraints>
+    <properties>
+      <minimumSize width="460" height="70"/>
+      <preferredSize width="460" height="70"/>
+    </properties>
+    <border type="line">
+      <color color="-16711493"/>
+    </border>
+    <children>
+      <component id="e4367" class="javax.swing.JProgressBar" binding="progreso">
+        <constraints border-constraint="North"/>
+        <properties>
+          <stringPainted value="true"/>
+        </properties>
+      </component>
+      <component id="7fdd8" class="javax.swing.JButton" binding="pausar">
+        <constraints border-constraint="West"/>
+        <properties>
+          <text value="Pausar"/>
+        </properties>
+      </component>
+      <component id="9adeb" class="javax.swing.JButton" binding="parar">
+        <constraints border-constraint="East"/>
+        <properties>
+          <text value="Parar"/>
+        </properties>
+      </component>
+      <component id="a784c" class="javax.swing.JCheckBox" binding="archivo">
+        <constraints border-constraint="South"/>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <text value="Eliminar archivo descargado"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
