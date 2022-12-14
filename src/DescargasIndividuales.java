@@ -46,8 +46,10 @@ public class DescargasIndividuales extends JPanel{
         parar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("proceso " + SwingUtilities.isEventDispatchThread());
                 hilo.cancel(true);
-                if(archivo.isSelected() == true){
+                int opcion = JOptionPane.showConfirmDialog(panel1, "¿Desea eliminar la descarga?", "Eliminar descarga", JOptionPane.YES_NO_OPTION);
+                if(opcion == 0){
                     destino.delete();
                 }
             }
@@ -55,14 +57,15 @@ public class DescargasIndividuales extends JPanel{
     }
 
     private void actualizar(PropertyChangeEvent evt) throws InterruptedException {
-        if(evt.getPropertyName().equals("progress")){
+        if(evt.getPropertyName().equals("progress") && !detener){
             progreso.setValue((int)evt.getNewValue());
         }
         if(detener == true){
-            hilo.cancel(true);
             pausar.setText("Reanudar");
+            //hilo.wait();
         }
         if(detener == false){
+           // hilo.notify();
             pausar.setText("Pausar");
         }
     }

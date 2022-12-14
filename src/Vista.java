@@ -24,6 +24,7 @@ public class Vista {
     private JTextField textoUrl;
     private JScrollPane centro;
     private JPanel panelCentro;
+    private JProgressBar global;
     private File ficheroDestino;
     private SwingWorker hilo;
     private DescargasIndividuales descargas;
@@ -61,6 +62,16 @@ public class Vista {
                     descargas = new DescargasIndividuales(ficheroDestino, textoUrl.getText());
                     panelCentro.add(descargas);
                     panelCentro.revalidate();
+                    pausar.setEnabled(true);
+                    eliminar.setEnabled(true);
+                    /*Thread hilo2 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (global.getValue() != 100);
+                                global.setValue(global.getValue() + descargas.progreso.getValue());
+                        }
+                    });
+                    hilo2.start();*/
                 }
                 catch (Exception ex){
                     ex.printStackTrace();

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Descarga_Ficheros:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Descarga_Ficheros_jar</output-path>
+    <root id="archive" name="Descarga_Ficheros.jar">
+      <element id="module-output" name="Descarga_Ficheros" />
+    </root>
+  </artifact>
+</component>

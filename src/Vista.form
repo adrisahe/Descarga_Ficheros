@@ -116,6 +116,12 @@
               <text value="Parar/Eliminar Descargas"/>
             </properties>
           </component>
+          <component id="624b3" class="javax.swing.JProgressBar" binding="global">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <stringPainted value="true"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <scrollpane id="9abf1" binding="centro">
