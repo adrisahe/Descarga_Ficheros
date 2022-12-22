@@ -11,22 +11,22 @@ public class DescargasIndividuales extends JPanel{
     private JPanel panel1;
     private JButton pausar;
     private JButton parar;
-    private JCheckBox archivo;
     public boolean detener;
-    private SwingWorkerr hilo;
+    public SwingWorkerr hilo;
+    private File destino;
 
     public DescargasIndividuales(File destino, String url) {
         setLayout(new BorderLayout());
         add(panel1, BorderLayout.CENTER);
         setMaximumSize(new Dimension(23462346, 70));
-        detener = false;
+        this.destino = destino;
         pausar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(detener == false) {
+                if(!detener) {
                     detener = true;
                 }
-                else{
+                else if(detener){
                     detener = false;
                 }
             }
@@ -46,29 +46,31 @@ public class DescargasIndividuales extends JPanel{
         parar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("proceso " + SwingUtilities.isEventDispatchThread());
-                hilo.cancel(true);
-                int opcion = JOptionPane.showConfirmDialog(panel1, "¿Desea eliminar la descarga?", "Eliminar descarga", JOptionPane.YES_NO_OPTION);
-                if(opcion == 0){
-                    destino.delete();
-                }
+                eliminarDescarga();
             }
         });
     }
 
+
     private void actualizar(PropertyChangeEvent evt) throws InterruptedException {
-        if(evt.getPropertyName().equals("progress") && !detener){
-            progreso.setValue((int)evt.getNewValue());
-        }
-        if(detener == true){
-            pausar.setText("Reanudar");
-            //hilo.wait();
-        }
-        if(detener == false){
-           // hilo.notify();
-            pausar.setText("Pausar");
-        }
+            if (evt.getPropertyName().equals("progress") && !detener) {
+                pausar.setText("Pausar");
+                progreso.setValue((int) evt.getNewValue());
+            } else if (detener) {
+                pausar.setText("Reanudar");
+                hilo.pausar = true;
+            }
+            else if(evt.getPropertyName().equals("esperando") && !detener){
+                hilo.pausar = false;
+            }
     }
 
-
+    private void eliminarDescarga() {
+        panel1.setVisible(false);
+        hilo.cancel(true);
+        int opcion = JOptionPane.showConfirmDialog(panel1, "¿Desea eliminar la descarga?", "Eliminar descarga", JOptionPane.YES_NO_OPTION);
+        if(opcion == 0){
+            destino.delete();
+        }
+    }
 }

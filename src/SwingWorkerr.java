@@ -8,6 +8,7 @@ public class SwingWorkerr extends javax.swing.SwingWorker<Void, Integer> {
     private File destino;
     private String url;
     private JProgressBar progreso;
+    public boolean pausar;
 
 
     public SwingWorkerr(File destino, String url, JProgressBar progreso) {
@@ -18,7 +19,6 @@ public class SwingWorkerr extends javax.swing.SwingWorker<Void, Integer> {
 
     @Override
     protected Void doInBackground() throws Exception {
-        //System.out.println(SwingUtilities.isEventDispatchThread());
         downloadFile(destino, url);
         return null;
     }
@@ -37,12 +37,18 @@ public class SwingWorkerr extends javax.swing.SwingWorker<Void, Integer> {
             long bytesEscritos = 0;
             System.out.println("tamaño descarga: " + tamañoTotal);
             while ((length = is.read(buffer)) > 0 && !isCancelled()) {
-                os.write(buffer, 0, length);
-                bytesEscritos += length;
-                long porcentaje = bytesEscritos * 100 / tamañoTotal;
-                setProgress( (int) porcentaje);
+                if(pausar == false) {
+                    os.write(buffer, 0, length);
+                    bytesEscritos += length;
+                    long porcentaje = bytesEscritos * 100 / tamañoTotal;
+                    setProgress((int) porcentaje);
+                }
+                else if(pausar==true && !isCancelled()){ ;
+                    firePropertyChange("esperando", false, true);
+                    Thread.sleep(400);
+                }
             }
-            System.out.println("Fichero origen " + bytesEscritos);
+            System.out.println("Fichero Descargado: " + bytesEscritos);
         } finally {
             is.close();
             os.close();

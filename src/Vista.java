@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
+import java.io.*;
 import java.util.Scanner;
 
 public class Vista {
@@ -20,82 +20,122 @@ public class Vista {
     private JPanel sur;
     private JButton pausar;
     private JButton eliminar;
-    private JCheckBox seleccionarDirectorioDescargasCheckBox;
     private JTextField textoUrl;
     private JScrollPane centro;
     private JPanel panelCentro;
     private JProgressBar global;
+    private JButton directorioDefecto;
     private File ficheroDestino;
     private SwingWorker hilo;
     private DescargasIndividuales descargas;
 
-    public Vista() {
+    public Vista() throws IOException {
         JFrame frame = new JFrame("Vista");
         frame.setContentPane(principal);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setSize(600,600);
         frame.setVisible(true);
+        leerFichero();
         destino.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFileChooser selector = new JFileChooser();
-                int respuesta = selector.showOpenDialog(null);
-                if(respuesta == JFileChooser.APPROVE_OPTION){
-                    ficheroDestino = selector.getSelectedFile();
-                    descargar.setEnabled(true);
-                }
+                destinoDelFichero();
             }
         });
         descargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    /*hilo = new SwingWorkerr(ficheroDestino, textoUrl.getText());
-                    hilo.addPropertyChangeListener(new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent evt) {
-                            cambiosVentana(evt);
-                        }
-                    });
-                    hilo.execute();*/
-                    descargas = new DescargasIndividuales(ficheroDestino, textoUrl.getText());
-                    panelCentro.add(descargas);
-                    panelCentro.revalidate();
-                    pausar.setEnabled(true);
-                    eliminar.setEnabled(true);
-                    /*Thread hilo2 = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            while (global.getValue() != 100);
-                                global.setValue(global.getValue() + descargas.progreso.getValue());
-                        }
-                    });
-                    hilo2.start();*/
-                }
-                catch (Exception ex){
-                    ex.printStackTrace();
-                }
+                descargarFichero();
+            }
+        });
+        eliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cancelarDescargas();
+            }
+        });
+        directorioDefecto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                directorioPorDefecto();
             }
         });
     }
 
-    /*private void cambiosVentana(PropertyChangeEvent evt) {
-        System.out.println(SwingUtilities.isEventDispatchThread());
-        System.out.println(evt.getPropertyName());
-        System.out.println(evt.getNewValue());
-        if(evt.getPropertyName().equals("state")){
-            if(evt.getNewValue().equals(SwingWorker.StateValue.STARTED)){
-                descargas = new DescargasIndividuales();
-                panelCentro.add(descargas);
-                panelCentro.revalidate();
+    private void destinoDelFichero() {
+        JFileChooser selector = new JFileChooser();
+        int respuesta = selector.showOpenDialog(null);
+        if(respuesta == JFileChooser.APPROVE_OPTION){
+            ficheroDestino = selector.getSelectedFile();
+            descargar.setEnabled(true);
+        }
+    }
+
+    private void descargarFichero() {
+        try {
+            descargas = new DescargasIndividuales(ficheroDestino, textoUrl.getText());
+            panelCentro.add(descargas);
+            panelCentro.revalidate();
+            pausar.setEnabled(true);
+            eliminar.setEnabled(true);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void leerFichero() throws IOException {
+        BufferedReader bf = null;
+        try {
+            File fichero = new File("src\\recursos\\directorio.txt");
+            bf = new BufferedReader(new FileReader(fichero));
+            String ruta;
+            if((ruta = bf.readLine()) != null){
+                ficheroDestino = new File(ruta);
+                label.setText("El directorio por defecto es " + ruta);
+                descargar.setEnabled(true);
             }
         }
-        else if(evt.getPropertyName().equals("progress")){
-            descargas.progreso.setValue((int)evt.getNewValue());
+        catch (Exception ex){
+            ex.printStackTrace();
         }
-        else if(descargas.detener == true){
-            hilo.cancel(true);
+        finally {
+            bf.close();
         }
-    }*/
+    }
+
+    private void directorioPorDefecto(){
+        BufferedWriter bw = null;
+        JFileChooser selector = new JFileChooser();
+        int respuesta = selector.showOpenDialog(null);
+        if(respuesta == JFileChooser.APPROVE_OPTION){
+            String rutaAbsoluta = selector.getSelectedFile().getAbsolutePath();
+            try {
+                bw = new BufferedWriter(new FileWriter("src\\recursos\\directorio.txt"));
+                bw.write(rutaAbsoluta);
+                label.setText("El directorio por defecto es " + rutaAbsoluta);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            finally {
+                try {
+                    bw.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+            ficheroDestino = selector.getSelectedFile();
+            descargar.setEnabled(true);
+        }
+    }
+
+    private void cancelarDescargas(){
+        for (int i = 0; i < panelCentro.getComponentCount(); i++){
+            System.out.println("proceso " + SwingUtilities.isEventDispatchThread());
+            panelCentro.getComponent(i).setVisible(false);
+        }
+    }
+
 }

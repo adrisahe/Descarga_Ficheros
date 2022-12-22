@@ -19,7 +19,7 @@
             <constraints border-constraint="Center"/>
             <properties>
               <horizontalAlignment value="0"/>
-              <icon value="imagenes/REBOBIKE.png"/>
+              <icon value="recursos/REBOBIKE.png"/>
               <text value=""/>
             </properties>
           </component>
